@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="supported-color-schemes" content="dark">
+<title>لوحة مفاتيح عربية ملوّنة</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#121214">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<style>
+:root{color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#121214;--fg:#f2f2f5;--card:#1e1e22;--bd:#3a3a40;--kb:#1a1a1e}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Naskh Arabic","Noto Sans Arabic",sans-serif;display:flex;flex-direction:column}
+header{position:relative;display:flex;gap:8px;align-items:center;padding:8px 10px}
+header h1{font-size:17px;margin:0;flex:1}
+.act{border:1px solid var(--bd);background:var(--card);color:var(--fg);border-radius:8px;padding:8px 12px;font-size:15px;font-family:inherit}
+.bar{display:flex;flex-wrap:wrap;gap:6px;padding:0 10px 8px}
+.bar .act{flex:1 1 auto}
+textarea{flex:1;min-height:80px;margin:0 10px 8px;padding:10px;font-size:20px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--fg);resize:none;font-family:inherit}
+#mm{position:absolute;left:10px;top:100%;display:none;z-index:30;min-width:220px;background:var(--card);border:1px solid var(--bd);border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.35);overflow:hidden}
+#mm button{display:block;width:100%;padding:13px 14px;text-align:start;border:0;border-bottom:1px solid var(--bd);background:none;color:var(--fg);font-size:15px;font-family:inherit}
+#mm input{display:none;width:calc(100% - 16px);margin:8px;padding:8px;font-size:13px;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--fg);direction:ltr}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#222;color:#fff;padding:10px 16px;border-radius:20px;font-size:14px;display:none;z-index:40}
+#kb{--u:min(calc((100vw - 8px)/7),11.5vh);direction:ltr;background:var(--kb);padding:6px 4px 8px;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.tabs{display:flex;gap:6px;padding:0 4px 4px}
+.tab{flex:1;height:34px;border:0;border-radius:8px;background:var(--card);color:var(--fg);font-size:15px;font-weight:600;font-family:inherit}
+.tab.on{outline:3px solid #1E88E5}
+#vp{overflow:hidden;touch-action:pan-y}
+#pg{display:flex;width:200%;transition:transform .25s}
+.pg{width:50%}
+.r{display:flex;justify-content:center}
+.k{flex:none;padding:0;height:calc(var(--u) - 3px);margin:1.5px;border:0;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:visible;font-size:calc(var(--u)*.6);line-height:normal;font-weight:600;font-family:inherit;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.3)}
+.k:active{transform:translateY(2px);box-shadow:none;filter:brightness(1.2)}
+#pop{position:fixed;display:none;z-index:20;gap:4px;padding:4px;background:#2a2a30;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,.55);outline:3px solid #fff}
+#pop button{width:calc(var(--u)*1.15);height:calc(var(--u)*1.15);padding:0;border:0;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:visible;font-size:calc(var(--u)*.68);line-height:normal;font-weight:700;font-family:inherit}
+</style>
+</head>
+<body>
+<header><h1>لوحة مفاتيح عربية ملوّنة</h1><button class="act" id="mn" type="button" aria-label="خيارات">▾</button>
+<div id="mm"><button type="button" id="sh">مشاركة لوحة المفاتيح</button><button type="button" id="cpl">نسخ رابط لوحة المفاتيح</button><button type="button" id="lg">لوحة المفاتيح الفرنسية (Français)</button><input id="lk" readonly></div></header>
+<div class="bar"><button class="act" id="cp" type="button">نسخ</button><button class="act" id="ps" type="button">لصق</button><button class="act" id="sa" type="button">تحديد الكل</button><button class="act" id="cl" type="button">مسح</button></div>
+<div id="toast"></div>
+<textarea id="t" dir="auto" lang="ar" inputmode="none" placeholder="المس المفاتيح أدناه…" autofocus></textarea>
+<div id="kb"></div>
+<script>
+const ta=document.getElementById('t'),kb=document.getElementById('kb');
+// [fond, texte] : fonds doux et texte foncé assorti
+const pal=[['#C98A86','#4A0D0D'],['#CDA672','#3D2200'],['#CFC074','#332B00'],['#8FB391','#0F3A14'],['#7DB5BC','#00343A'],['#7E9CC4','#0A1F4D'],['#9C8DBF','#1E1060'],['#C28AA3','#4A0A2B'],['#A8948D','#2B1815'],['#7AA7A1','#00241F']];
+let n=0;const col=()=>pal[(n++)%10];
+function ins(s){ta.focus();ta.setRangeText(s,ta.selectionStart,ta.selectionEnd,'end')}
+function del(){ta.focus();let a=ta.selectionStart,b=ta.selectionEnd;if(a===b&&a>0)a--;ta.setRangeText('',a,b,'end')}
+function key(label,color,flex,fn){
+ const b=document.createElement('button');b.type='button';b.className='k';b.textContent=label;
+ const [bg,fg]=color;b.style.background=bg;b.style.color=fg;b.style.setProperty('-webkit-text-fill-color',fg);
+ if(label==='مسافة')b.style.fontSize='calc(var(--u)*.42)';
+ b.style.width=`calc(var(--u)*${flex} - 3px)`;
+ b.addEventListener('mousedown',e=>e.preventDefault());
+ b.addEventListener('click',()=>{if(navigator.vibrate)try{navigator.vibrate(8)}catch(e){}fn()});
+ return b}
+function row(par){const r=document.createElement('div');r.className='r';(par||kb).appendChild(r);return r}
+// Les rangées sont écrites de droite à gauche (ordre de lecture arabe)
+function addRow(items,par){const r=row(par);items.slice().reverse().forEach(i=>r.appendChild(i));return r}
+
+// ----- Appui long : formes voisines et voyelles brèves -----
+const LONG_MS=1000; // durée de l'appui long (millisecondes)
+const HK=['\u064E','\u064F','\u0650','\u0651','\u0652'];
+const ALT={'ا':['أ','إ','آ','ء','ٱ'],'و':['ؤ'],'ي':['ى','ئ'],'ه':['ة'],'ء':['أ','إ','ؤ','ئ'],'ة':['ه'],'ى':['ي','ئ']};
+function options(c){const o=(ALT[c]||[]).slice();for(const h of HK){if(o.length>=5)break;o.push(c+h)}return o}
+const pop=document.createElement('div');pop.id='pop';kb.appendChild(pop);
+let popTm;
+function hidePop(){pop.style.display='none';clearTimeout(popTm)}
+function showPop(btn,opts,color){
+ pop.textContent='';
+ opts.slice().reverse().forEach(o=>{
+  const b=document.createElement('button');b.type='button';b.textContent=o;
+  b.style.background=color[0];b.style.color=color[1];b.style.setProperty('-webkit-text-fill-color',color[1]);
+  b.addEventListener('mousedown',e=>e.preventDefault());
+  b.addEventListener('click',()=>{ins(o);hidePop()});
+  pop.appendChild(b)});
+ pop.style.display='flex';
+ const r=btn.getBoundingClientRect(),w=pop.offsetWidth;
+ pop.style.left=Math.max(4,Math.min(innerWidth-w-4,r.left+r.width/2-w/2))+'px';
+ pop.style.top=Math.max(4,r.top-pop.offsetHeight-8)+'px';
+ if(navigator.vibrate)try{navigator.vibrate(15)}catch(e){}
+ clearTimeout(popTm);popTm=setTimeout(hidePop,5000)}
+document.addEventListener('pointerdown',e=>{if(!pop.contains(e.target))hidePop()});
+kb.addEventListener('contextmenu',e=>e.preventDefault());
+function letter(c,color){
+ let lp=false,t=null,x0=0,y0=0;
+ const b=key(c,color,1,()=>{if(lp){lp=false;return}ins(c)});
+ b.addEventListener('pointerdown',e=>{lp=false;x0=e.clientX;y0=e.clientY;clearTimeout(t);t=setTimeout(()=>{lp=true;showPop(b,options(c),color)},LONG_MS)});
+ b.addEventListener('pointermove',e=>{if(Math.abs(e.clientX-x0)>12||Math.abs(e.clientY-y0)>12)clearTimeout(t)});
+ ['pointerup','pointerleave','pointercancel'].forEach(ev=>b.addEventListener(ev,()=>clearTimeout(t)));
+ return b}
+
+// ----- Pages -----
+const lt=c=>letter(c,col());
+const sy=c=>key(c,col(),1,()=>ins(c));
+const hk=m=>key('ـ'+m,col(),1,()=>ins(m));
+const mk=t=>{const b=document.createElement('button');b.type='button';b.className='tab';b.textContent=t;b.addEventListener('mousedown',e=>e.preventDefault());return b};
+const tabs=document.createElement('div');tabs.className='tabs';
+const t1=mk('الحروف'),t2=mk('الحركات والأرقام');tabs.append(t2,t1);
+const vp=document.createElement('div');vp.id='vp';
+const pg=document.createElement('div');pg.id='pg';
+const p1=document.createElement('div'),p2=document.createElement('div');p1.className=p2.className='pg';
+pg.append(p1,p2);vp.appendChild(pg);kb.append(tabs,vp);
+// Page 1 : les lettres
+addRow([...'ابتثجحخ'].map(lt),p1);
+addRow([...'دذرزسشص'].map(lt),p1);
+addRow([...'ضطظعغفق'].map(lt),p1);
+addRow([...'كلمنهوي'].map(lt),p1);
+addRow([...'ةىءئؤأإ'].map(lt),p1);
+// Page 2 : chiffres, voyelles brèves, ponctuation
+addRow([...'1234567'].map(sy),p2);
+addRow([...'890'].map(sy).concat(['\u064E','\u064F','\u0650','\u0651'].map(hk)),p2);
+addRow(['\u064B','\u064C','\u064D','\u0652','\u0670'].map(hk).concat([sy('ـ'),hk('\u0653')]),p2);
+addRow([...'،؛؟!:-/'].map(sy),p2);
+addRow([...'()«»"\'@'].map(sy),p2);
+// Rangée commune (de droite à gauche)
+const bs=key('⌫',['#C98A86','#4A0D0D'],1,()=>{});
+let tm;const stop=()=>{clearTimeout(tm);clearInterval(tm)};
+bs.addEventListener('pointerdown',()=>{del();tm=setTimeout(()=>{tm=setInterval(del,60)},400)});
+['pointerup','pointerleave','pointercancel'].forEach(ev=>bs.addEventListener(ev,stop));
+addRow([
+ key('؟',['#9AA5AB','#0F1A1F'],1,()=>ins('؟')),
+ key('،',['#B08CBB','#3A0B4A'],1,()=>ins('،')),
+ key('مسافة',['#A9B1B5','#1B2428'],2,()=>ins(' ')),
+ key('.',['#CC9580','#4D1E0A'],1,()=>ins('.')),
+ bs,
+ key('⏎',['#8FB391','#0F3A14'],1,()=>ins('\n'))
+]);
+// Navigation entre pages
+let page=0;
+function go(i){page=Math.max(0,Math.min(1,i));pg.style.transform=`translateX(${-50*page}%)`;t1.classList.toggle('on',page===0);t2.classList.toggle('on',page===1)}
+t1.onclick=()=>go(0);t2.onclick=()=>go(1);
+let sx=0,sy0=0;
+vp.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy0=e.touches[0].clientY},{passive:true});
+vp.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy0;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy))go(page+(dx<0?1:-1))},{passive:true});
+go(0);
+
+// ----- Barre d'outils et menu -----
+const LIEN=location.href.split('#')[0].split('?')[0];
+const mm=document.getElementById('mm'),lk=document.getElementById('lk'),toast=document.getElementById('toast');
+function say(t){toast.textContent=t;toast.style.display='block';setTimeout(()=>toast.style.display='none',2200)}
+function showLink(){lk.style.display='block';lk.value=LIEN;lk.focus();lk.select();say('انسخ الرابط المعروض')}
+async function copyLink(){try{await navigator.clipboard.writeText(LIEN);say('تم نسخ الرابط');mm.style.display='none'}catch(e){showLink()}}
+document.getElementById('mn').onclick=e=>{e.stopPropagation();mm.style.display=mm.style.display==='block'?'none':'block';lk.style.display='none'};
+document.getElementById('cpl').onclick=copyLink;
+document.getElementById('lg').onclick=()=>{location.href='index.html'};
+document.getElementById('sh').onclick=async()=>{if(navigator.share){try{await navigator.share({title:'لوحة مفاتيح عربية ملوّنة',text:'لوحة مفاتيح عربية ملوّنة',url:LIEN});mm.style.display='none';return}catch(e){if(e&&e.name==='AbortError')return}}copyLink()};
+document.addEventListener('pointerdown',e=>{if(!mm.contains(e.target)&&e.target.id!=='mn')mm.style.display='none'});
+document.getElementById('cl').onclick=()=>{ta.value='';ta.focus()};
+document.getElementById('cp').onclick=async()=>{const a=ta.selectionStart,b=ta.selectionEnd,t=a!==b?ta.value.slice(a,b):ta.value;try{await navigator.clipboard.writeText(t);say(a!==b?'تم نسخ المحدد':'تم نسخ النص')}catch(e){ta.focus();if(a===b)ta.select();try{document.execCommand('copy');say('تم نسخ النص')}catch(_){say('تعذّر النسخ')}}};
+document.getElementById('ps').onclick=async()=>{try{const t=await navigator.clipboard.readText();if(t)ins(t);say(t?'تم اللصق':'الحافظة فارغة')}catch(e){ta.focus();say('اضغط مطولاً داخل المربع ثم اختر «لصق»')}};
+document.getElementById('sa').onclick=()=>{ta.focus();ta.select();ta.setSelectionRange(0,ta.value.length)};
+['cp','ps','sa','cl'].forEach(i=>document.getElementById(i).addEventListener('mousedown',e=>e.preventDefault()));
+</script>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
+</script>
+</body>
+</html>
