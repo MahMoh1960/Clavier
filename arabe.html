@@ -19,31 +19,34 @@
 html,body{height:100%;margin:0}
 body{background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Naskh Arabic","Noto Sans Arabic",sans-serif;display:flex;flex-direction:column}
 header{position:relative;display:flex;gap:8px;align-items:center;padding:8px 10px}
-header h1{font-size:17px;margin:0;flex:1}
-.act{border:1px solid var(--bd);background:var(--card);color:var(--fg);border-radius:8px;padding:8px 12px;font-size:15px;font-family:inherit}
+header h1{font-size:22px;margin:0;flex:1}
+.act{border:1px solid var(--bd);background:var(--card);color:var(--fg);border-radius:8px;padding:12px 14px;font-size:21px;font-family:inherit}
+.act{font-weight:600}
+#mn{font-size:30px;line-height:1;padding:8px 18px}
+#lg2{font-size:20px;font-weight:700;padding:10px 14px;white-space:nowrap}
 .bar{display:flex;flex-wrap:wrap;gap:6px;padding:0 10px 8px}
 .bar .act{flex:1 1 auto}
-textarea{flex:1;min-height:80px;margin:0 10px 8px;padding:10px;font-size:20px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--fg);resize:none;font-family:inherit}
+textarea{flex:1;min-height:80px;margin:0 10px 8px;padding:10px;font-size:24px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--fg);resize:none;font-family:inherit}
 #mm{position:absolute;left:10px;top:100%;display:none;z-index:30;min-width:220px;background:var(--card);border:1px solid var(--bd);border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.35);overflow:hidden}
-#mm button{display:block;width:100%;padding:13px 14px;text-align:start;border:0;border-bottom:1px solid var(--bd);background:none;color:var(--fg);font-size:15px;font-family:inherit}
+#mm button{display:block;width:100%;padding:13px 14px;text-align:start;border:0;border-bottom:1px solid var(--bd);background:none;color:var(--fg);font-size:21px;font-family:inherit}
 #mm input{display:none;width:calc(100% - 16px);margin:8px;padding:8px;font-size:13px;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--fg);direction:ltr}
 #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#222;color:#fff;padding:10px 16px;border-radius:20px;font-size:14px;display:none;z-index:40}
-#kb{--u:min(calc((100vw - 8px)/7),11.5vh);direction:ltr;background:var(--kb);padding:6px 4px 8px;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+#kb{--u:min(calc((100vw - 8px)/6),10.5vh);direction:ltr;background:var(--kb);padding:6px 4px 8px;user-select:none;-webkit-user-select:none;touch-action:manipulation}
 .tabs{display:flex;gap:6px;padding:0 4px 4px}
-.tab{flex:1;height:34px;border:0;border-radius:8px;background:var(--card);color:var(--fg);font-size:15px;font-weight:600;font-family:inherit}
+.tab{flex:1;height:48px;border:0;border-radius:8px;background:var(--card);color:var(--fg);font-size:21px;font-weight:600;font-family:inherit}
 .tab.on{outline:3px solid #1E88E5}
 #vp{overflow:hidden;touch-action:pan-y}
 #pg{display:flex;width:200%;transition:transform .25s}
 .pg{width:50%}
 .r{display:flex;justify-content:center}
-.k{flex:none;padding:0;height:calc(var(--u) - 3px);margin:1.5px;border:0;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:visible;font-size:calc(var(--u)*.6);line-height:normal;font-weight:600;font-family:inherit;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.3)}
+.k{flex:none;padding:0;height:calc(var(--u) - 3px);margin:1.5px;border:0;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:visible;font-size:calc(var(--u)*.68);line-height:normal;font-weight:600;font-family:inherit;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.3)}
 .k:active{transform:translateY(2px);box-shadow:none;filter:brightness(1.2)}
 #pop{position:fixed;display:none;z-index:20;gap:4px;padding:4px;background:#2a2a30;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,.55);outline:3px solid #fff}
-#pop button{width:calc(var(--u)*1.15);height:calc(var(--u)*1.15);padding:0;border:0;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:visible;font-size:calc(var(--u)*.68);line-height:normal;font-weight:700;font-family:inherit}
+#pop button{width:calc(var(--u)*1.15);height:calc(var(--u)*1.15);padding:0;border:0;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:visible;font-size:calc(var(--u)*.72);line-height:normal;font-weight:700;font-family:inherit}
 </style>
 </head>
 <body>
-<header><h1>لوحة مفاتيح عربية ملوّنة</h1><button class="act" id="mn" type="button" aria-label="خيارات">▾</button>
+<header><h1>لوحة مفاتيح عربية ملوّنة</h1><button class="act" id="lg2" type="button">Français ⇄</button><button class="act" id="mn" type="button" aria-label="خيارات">▾</button>
 <div id="mm"><button type="button" id="sh">مشاركة لوحة المفاتيح</button><button type="button" id="cpl">نسخ رابط لوحة المفاتيح</button><button type="button" id="lg">لوحة المفاتيح الفرنسية (Français)</button><input id="lk" readonly></div></header>
 <div class="bar"><button class="act" id="cp" type="button">نسخ</button><button class="act" id="ps" type="button">لصق</button><button class="act" id="sa" type="button">تحديد الكل</button><button class="act" id="cl" type="button">مسح</button></div>
 <div id="toast"></div>
@@ -112,17 +115,19 @@ const pg=document.createElement('div');pg.id='pg';
 const p1=document.createElement('div'),p2=document.createElement('div');p1.className=p2.className='pg';
 pg.append(p1,p2);vp.appendChild(pg);kb.append(tabs,vp);
 // Page 1 : les lettres
-addRow([...'ابتثجحخ'].map(lt),p1);
-addRow([...'دذرزسشص'].map(lt),p1);
-addRow([...'ضطظعغفق'].map(lt),p1);
-addRow([...'كلمنهوي'].map(lt),p1);
-addRow([...'ةىءئؤأإ'].map(lt),p1);
+addRow([...'ابتثجح'].map(lt),p1);
+addRow([...'خدذرزس'].map(lt),p1);
+addRow([...'شصضطظع'].map(lt),p1);
+addRow([...'غفقكلم'].map(lt),p1);
+addRow([...'نهويةى'].map(lt),p1);
+addRow([...'ءئؤأإآ'].map(lt),p1);
 // Page 2 : chiffres, voyelles brèves, ponctuation
-addRow([...'1234567'].map(sy),p2);
-addRow([...'890'].map(sy).concat(['\u064E','\u064F','\u0650','\u0651'].map(hk)),p2);
-addRow(['\u064B','\u064C','\u064D','\u0652','\u0670'].map(hk).concat([sy('ـ'),hk('\u0653')]),p2);
-addRow([...'،؛؟!:-/'].map(sy),p2);
-addRow([...'()«»"\'@'].map(sy),p2);
+addRow([...'123456'].map(sy),p2);
+addRow([...'7890'].map(sy).concat(['\u064E','\u064F'].map(hk)),p2);
+addRow(['\u0650','\u0651','\u064B','\u064C','\u064D','\u0652'].map(hk),p2);
+addRow(['\u0670','\u0653'].map(hk).concat([sy('ـ'),sy('،'),sy('؛'),sy('؟')]),p2);
+addRow([...'!:-/()'].map(sy),p2);
+addRow([...'«»"\'@%'].map(sy),p2);
 // Rangée commune (de droite à gauche)
 const bs=key('⌫',['#C98A86','#4A0D0D'],1,()=>{});
 let tm;const stop=()=>{clearTimeout(tm);clearInterval(tm)};
@@ -130,7 +135,6 @@ bs.addEventListener('pointerdown',()=>{del();tm=setTimeout(()=>{tm=setInterval(d
 ['pointerup','pointerleave','pointercancel'].forEach(ev=>bs.addEventListener(ev,stop));
 addRow([
  key('؟',['#9AA5AB','#0F1A1F'],1,()=>ins('؟')),
- key('،',['#B08CBB','#3A0B4A'],1,()=>ins('،')),
  key('مسافة',['#A9B1B5','#1B2428'],2,()=>ins(' ')),
  key('.',['#CC9580','#4D1E0A'],1,()=>ins('.')),
  bs,
@@ -154,6 +158,7 @@ async function copyLink(){try{await navigator.clipboard.writeText(LIEN);say('ت�
 document.getElementById('mn').onclick=e=>{e.stopPropagation();mm.style.display=mm.style.display==='block'?'none':'block';lk.style.display='none'};
 document.getElementById('cpl').onclick=copyLink;
 document.getElementById('lg').onclick=()=>{location.href='index.html'};
+document.getElementById('lg2').onclick=()=>{location.href='index.html'};
 document.getElementById('sh').onclick=async()=>{if(navigator.share){try{await navigator.share({title:'لوحة مفاتيح عربية ملوّنة',text:'لوحة مفاتيح عربية ملوّنة',url:LIEN});mm.style.display='none';return}catch(e){if(e&&e.name==='AbortError')return}}copyLink()};
 document.addEventListener('pointerdown',e=>{if(!mm.contains(e.target)&&e.target.id!=='mn')mm.style.display='none'});
 document.getElementById('cl').onclick=()=>{ta.value='';ta.focus()};

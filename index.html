@@ -19,30 +19,33 @@
 html,body{height:100%;margin:0}
 body{background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column}
 header{position:relative;display:flex;gap:8px;align-items:center;padding:8px 10px}
-header h1{font-size:16px;margin:0;flex:1}
-.act{border:1px solid var(--bd);background:var(--card);color:var(--fg);border-radius:8px;padding:8px 12px;font-size:14px}
-textarea{flex:1;min-height:80px;margin:0 10px 8px;padding:10px;font-size:18px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--fg);resize:none}
-#kb{--u:min(calc((100vw - 8px)/7),11.5vh);background:var(--kb);padding:6px 4px 8px;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+header h1{font-size:21px;margin:0;flex:1}
+.act{border:1px solid var(--bd);background:var(--card);color:var(--fg);border-radius:8px;padding:12px 14px;font-size:20px}
+.act{font-weight:600}
+#mn{font-size:30px;line-height:1;padding:8px 18px}
+#lg2{font-size:20px;font-weight:700;padding:10px 14px;white-space:nowrap}
+textarea{flex:1;min-height:80px;margin:0 10px 8px;padding:10px;font-size:22px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--fg);resize:none}
+#kb{--u:min(calc((100vw - 8px)/6),10.5vh);background:var(--kb);padding:6px 4px 8px;user-select:none;-webkit-user-select:none;touch-action:manipulation}
 .r{display:flex;justify-content:center}
 #pop{position:fixed;display:none;z-index:20;width:calc(var(--u)*1.4);height:calc(var(--u)*1.4);padding:0;border:0;border-radius:14px;font-size:calc(var(--u)*1.0);font-weight:700;font-family:inherit;box-shadow:0 4px 16px rgba(0,0,0,.55);outline:3px solid #fff}
 .bar{display:flex;flex-wrap:wrap;gap:6px;padding:0 10px 8px}
 .bar .act{flex:1 1 auto}
 .tabs{display:flex;gap:6px;padding:0 4px 4px}
-.tab{flex:1;height:34px;border:0;border-radius:8px;background:var(--card);color:var(--fg);font-size:14px;font-weight:600;font-family:inherit}
+.tab{flex:1;height:48px;border:0;border-radius:8px;background:var(--card);color:var(--fg);font-size:20px;font-weight:600;font-family:inherit}
 .tab.on{outline:3px solid #1E88E5}
 #mm{position:absolute;right:10px;top:100%;display:none;z-index:30;min-width:210px;background:var(--card);border:1px solid var(--bd);border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.35);overflow:hidden}
-#mm button{display:block;width:100%;padding:13px 14px;text-align:left;border:0;border-bottom:1px solid var(--bd);background:none;color:var(--fg);font-size:15px;font-family:inherit}
+#mm button{display:block;width:100%;padding:14px 14px;text-align:left;border:0;border-bottom:1px solid var(--bd);background:none;color:var(--fg);font-size:20px;font-family:inherit}
 #mm input{display:none;width:calc(100% - 16px);margin:8px;padding:8px;font-size:13px;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--fg)}
 #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#222;color:#fff;padding:10px 16px;border-radius:20px;font-size:14px;display:none;z-index:40}
 #vp{overflow:hidden;touch-action:pan-y}
 #pg{display:flex;width:200%;transition:transform .25s}
 .pg{width:50%}
-.k{flex:none;padding:0;height:calc(var(--u) - 3px);margin:1.5px;border:0;border-radius:10px;font-size:calc(var(--u)*.78);line-height:1;font-weight:600;font-family:inherit;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.3)}
+.k{flex:none;padding:0;height:calc(var(--u) - 3px);margin:1.5px;border:0;border-radius:10px;font-size:calc(var(--u)*.82);line-height:1;font-weight:600;font-family:inherit;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.3)}
 .k:active{transform:translateY(2px);box-shadow:none;filter:brightness(1.2)}
 </style>
 </head>
 <body>
-<header><h1>Clavier AZERTY coloré</h1><button class="act" id="mn" type="button" aria-label="Options">▾</button>
+<header><h1>Clavier AZERTY coloré</h1><button class="act" id="lg2" type="button">عربي ⇄</button><button class="act" id="mn" type="button" aria-label="Options">▾</button>
 <div id="mm"><button type="button" id="sh">Partager le clavier</button><button type="button" id="cpl">Copier le lien du clavier</button><button type="button" id="lg">Clavier arabe (عربي)</button><input id="lk" readonly></div></header>
 <div class="bar"><button class="act" id="cp" type="button">Copier</button><button class="act" id="ps" type="button">Coller</button><button class="act" id="sa" type="button">Tout sélectionner</button><button class="act" id="cl" type="button">Effacer</button></div>
 <div id="toast"></div>
@@ -95,22 +98,24 @@ const pg=document.createElement('div');pg.id='pg';
 const p1=document.createElement('div'),p2=document.createElement('div');p1.className=p2.className='pg';
 pg.append(p1,p2);vp.appendChild(pg);kb.append(tabs,vp);
 // Page 1 : lettres (ordre AZERTY)
-addRow([...'azertyu'].map(lt),p1);
-addRow([...'iopqsdf'].map(lt),p1);
-addRow([...'ghjklmw'].map(lt),p1);
-addRow([...'xcvbnç'].map(lt).concat([sy("'")]),p1);
+addRow([...'azerty'].map(lt),p1);
+addRow([...'uiopqs'].map(lt),p1);
+addRow([...'dfghjk'].map(lt),p1);
+addRow([...'lmwxcv'].map(lt),p1);
+addRow([...'bnç'].map(lt).concat([sy("'"),sy(','),sy('?')]),p1);
 // Page 2 : voyelles accentuées, chiffres, ponctuation
-addRow([...'1234567'].map(dg),p2);
-addRow([...'890'].map(dg).concat([...'éèêà'].map(lt)),p2);
-addRow([...'ùôîâûëï'].map(lt),p2);
-addRow([...'?!:;-@/'].map(sy),p2);
+addRow([...'123456'].map(dg),p2);
+addRow([...'7890'].map(dg).concat([...'éè'].map(lt)),p2);
+addRow([...'êàùôîâ'].map(lt),p2);
+addRow([...'ûëï'].map(lt).concat([sy(':'),sy(';'),sy('-')]),p2);
+addRow([sy('@'),sy('/'),sy('('),sy(')'),sy('"'),sy('!')],p2);
 // Rangée commune
 majBtn=key('⇧',['#9AA5AB','#0F1A1F'],1,()=>{maj=!maj;refresh()});
 const bs=key('⌫',['#C98A86','#4A0D0D'],1,()=>{});
 let tm;const stop=()=>{clearTimeout(tm);clearInterval(tm)};
 bs.addEventListener('pointerdown',()=>{del();tm=setTimeout(()=>{tm=setInterval(del,60)},400)});
 ['pointerup','pointerleave','pointercancel'].forEach(ev=>bs.addEventListener(ev,stop));
-addRow([majBtn,key(',',['#B08CBB','#3A0B4A'],1,()=>ins(',')),key('espace',['#A9B1B5','#1B2428'],2,()=>ins(' ')),key('.',['#CC9580','#4D1E0A'],1,()=>ins('.')),bs,key('⏎',['#8FB391','#0F3A14'],1,()=>ins('\n'))]);
+addRow([majBtn,key('espace',['#A9B1B5','#1B2428'],2,()=>ins(' ')),key('.',['#CC9580','#4D1E0A'],1,()=>ins('.')),bs,key('⏎',['#8FB391','#0F3A14'],1,()=>ins('\n'))]);
 // Navigation entre pages
 let page=0;
 function go(i){page=Math.max(0,Math.min(1,i));pg.style.transform=`translateX(${-50*page}%)`;t1.classList.toggle('on',page===0);t2.classList.toggle('on',page===1)}
@@ -128,6 +133,7 @@ async function copyLink(){try{await navigator.clipboard.writeText(LIEN);say('Lie
 document.getElementById('mn').onclick=e=>{e.stopPropagation();mm.style.display=mm.style.display==='block'?'none':'block';lk.style.display='none'};
 document.getElementById('cpl').onclick=copyLink;
 document.getElementById('lg').onclick=()=>{location.href='arabe.html'};
+document.getElementById('lg2').onclick=()=>{location.href='arabe.html'};
 document.getElementById('sh').onclick=async()=>{if(navigator.share){try{await navigator.share({title:'Clavier AZERTY coloré',text:'Clavier AZERTY coloré',url:LIEN});mm.style.display='none';return}catch(e){if(e&&e.name==='AbortError')return}}copyLink()};
 document.addEventListener('pointerdown',e=>{if(!mm.contains(e.target)&&e.target.id!=='mn')mm.style.display='none'});
 document.getElementById('cl').onclick=()=>{ta.value='';ta.focus()};
